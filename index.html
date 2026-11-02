@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#dff2f8">
+  <title>「辞めたいのに動けない」思考の癖診断</title>
+  <style>
+    /* 色や雰囲気を変えるときは、ここにある色を編集してください */
+    :root {
+      --color-ink: #24465a;
+      --color-muted: #5e7886;
+      --color-blue: #4c91b0;
+      --color-blue-dark: #34748f;
+      --color-sky: #e8f6fb;
+      --color-sea: #d8edf3;
+      --color-card: rgba(255, 255, 255, 0.88);
+      --color-border: #c9e2eb;
+      --color-button-text: #ffffff;
+      --radius-card: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--color-ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN",
+        "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+      line-height: 1.8;
+      background:
+        radial-gradient(ellipse at 80% 8%, rgba(255,255,255,.95) 0, rgba(255,255,255,0) 34%),
+        linear-gradient(180deg, #eaf8fc 0%, #d9eff6 46%, #c4e4ef 100%);
+      padding: 22px 14px 36px;
+    }
+    .page { width: 100%; max-width: 620px; margin: 0 auto; }
+    .topline {
+      width: 62px; height: 4px; border-radius: 99px;
+      background: #f1d59b; margin: 4px auto 22px;
+    }
+    .card {
+      background: var(--color-card);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: var(--radius-card);
+      box-shadow: 0 12px 34px rgba(50, 103, 126, .10);
+      padding: clamp(22px, 6vw, 38px);
+      backdrop-filter: blur(8px);
+    }
+    h1 { font-size: clamp(23px, 6vw, 30px); line-height: 1.5; margin: 0 0 14px; letter-spacing: .01em; }
+    h2 { font-size: 22px; line-height: 1.55; margin: 0 0 14px; }
+    p { margin: 0 0 14px; }
+    .intro { white-space: pre-line; }
+    .eyebrow { color: var(--color-blue-dark); font-size: 13px; letter-spacing: .08em; margin-bottom: 8px; }
+    .subtle { color: var(--color-muted); font-size: 14px; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 50px; padding: 12px 22px; border: 0; border-radius: 999px;
+      background: var(--color-blue); color: var(--color-button-text);
+      font: inherit; font-weight: 700; text-decoration: none; cursor: pointer;
+      transition: background .15s ease, transform .15s ease;
+    }
+    .button:hover { background: var(--color-blue-dark); }
+    .button:active { transform: scale(.99); }
+    .button:focus-visible, .choice:focus-visible { outline: 3px solid #e6bb68; outline-offset: 3px; }
+    .button.secondary { color: var(--color-blue-dark); background: #edf7fa; border: 1px solid var(--color-border); }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .button-row .button { flex: 1 1 180px; }
+    .progress-wrap { margin: 0 0 25px; }
+    .progress-label { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--color-muted); margin-bottom: 8px; }
+    .progress-track { height: 7px; background: #e1eef2; border-radius: 99px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, #72b7cf, #4c91b0); border-radius: 99px; transition: width .25s ease; }
+    .question { font-size: 20px; font-weight: 700; line-height: 1.65; margin-bottom: 20px; }
+    .choices { display: grid; gap: 11px; }
+    .choice {
+      display: flex; align-items: flex-start; gap: 13px; width: 100%;
+      text-align: left; border: 1px solid var(--color-border); border-radius: 16px;
+      background: rgba(255,255,255,.78); color: var(--color-ink);
+      padding: 15px 16px; font: inherit; cursor: pointer; line-height: 1.65;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+    .choice:hover { border-color: var(--color-blue); background: #f4fbfd; }
+    .choice:active { transform: scale(.995); }
+    .letter {
+      flex: 0 0 30px; height: 30px; display: grid; place-items: center;
+      border-radius: 50%; background: #e4f2f7; color: var(--color-blue-dark);
+      font-weight: 700; line-height: 1;
+    }
+    .choice.selected { border-color: var(--color-blue); background: #eaf6fa; }
+    .choice.selected .letter { background: var(--color-blue); color: white; }
+    .back-row { display: flex; justify-content: flex-start; margin-top: 19px; }
+    .text-button { border: 0; background: transparent; color: var(--color-blue-dark); font: inherit; padding: 8px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .result-type { display: inline-block; color: var(--color-blue-dark); background: #e4f3f8; border-radius: 999px; padding: 5px 12px; font-size: 14px; margin-bottom: 14px; }
+    .result-focus { font-weight: 700; margin-bottom: 10px; }
+    .first-step { margin: 20px 0; padding: 16px 18px; border-left: 4px solid #86bdcf; border-radius: 0 12px 12px 0; background: #f1f9fb; }
+    .line-box { border-top: 1px solid var(--color-border); margin-top: 25px; padding-top: 23px; }
+    .line-box p { margin-bottom: 16px; }
+    .disclaimer { color: var(--color-muted); font-size: 13px; margin-top: 20px; }
+    .hidden { display: none !important; }
+    .result-list { padding-left: 1.3em; }
+    @media (max-width: 380px) {
+      body { padding: 12px 10px 24px; }
+      .card { padding: 21px 17px; border-radius: 20px; }
+      .question { font-size: 18px; }
+      .choice { padding: 13px 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topline" aria-hidden="true"></div>
+
+    <section id="start-screen" class="card">
+      <div class="eyebrow">思考の傾向チェック</div>
+      <h1>「辞めたいのに動けない」思考の癖診断</h1>
+      <p class="intro">今の働き方を変えたい。
+だけど、なかなか動き出せない。
+あなたが動けなくなる理由は、どのタイプ？
+直感で5問に答えてね！</p>
+      <div class="button-row">
+        <button id="start-button" class="button" type="button">診断を始める</button>
+      </div>
+    </section>
+
+    <section id="question-screen" class="card hidden" aria-live="polite">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progress-text">Q1 / 5</span>
+          <span id="progress-percent">20%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="診断の進捗" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1" id="progress-track">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+      <div id="question-title" class="question"></div>
+      <div id="choices" class="choices"></div>
+      <div class="back-row">
+        <button id="back-button" class="text-button" type="button">← 前の質問に戻る</button>
+      </div>
+    </section>
+
+    <section id="result-screen" class="card hidden" aria-live="polite">
+      <div class="eyebrow">診断結果</div>
+      <h2 id="result-heading"></h2>
+      <div id="result-content"></div>
+      <p class="disclaimer">この診断は、今の思考の傾向を知るためのヒントです。あなたを決めつけるものではありません🌿</p>
+      <div class="line-box">
+        <p id="line-cta-text"></p>
+        <a id="line-link" class="button" href="#" target="_blank" rel="noopener noreferrer">LINEで相談する</a>
+      </div>
+      <div class="button-row">
+        <button id="restart-button" class="button secondary" type="button">もう一度診断する</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /*
+      変更しやすい設定：
+      1) LINE_URL：LINE公式アカウントのURLに変更
+      2) LINE_CTA_TEXT：診断結果の最後に表示する案内文を変更
+      3) LINE_BUTTON_TEXT：ボタンの表示を変更
+      4) 下の QUESTIONS / RESULTS：質問や診断結果を変更
+    */
+    const LINE_URL = "https://line.me/";
+    const LINE_CTA_TEXT = "LINEでの相談をご希望の方は、こちらからご連絡ください。";
+    const LINE_BUTTON_TEXT = "LINEで相談する";
+
+    const QUESTIONS = [
+      {
+        question: "Q1.「今の職場を辞めたい」と思ったとき、一番気になるのは？",
+        choices: {
+          A: "辞めて収入が減ったらどうしよう",
+          B: "次の職場で通用する自信がない",
+          C: "同僚に迷惑をかけてしまう",
+          D: "辞めたとして、何がしたいんだろう"
+        }
+      },
+      {
+        question: "Q2. 理想の働き方を考えても、行動に移せないのはなぜ？",
+        choices: {
+          A: "生活がどう変わるか不安だから",
+          B: "もっと経験やスキルが必要だと思うから",
+          C: "家族や職場の都合を優先してしまうから",
+          D: "自分に合う働き方が見えていないから"
+        }
+      },
+      {
+        question: "Q3. 仕事を変えようか迷っているとき、友人に「で、どうしたいの？」と聞かれたら？",
+        choices: {
+          A: "失敗したときのことが頭に浮かぶ",
+          B: "もう少し自信がついてから決めたい",
+          C: "周りがどう思うか気になってしまう",
+          D: "自分でも希望をうまく説明できない"
+        }
+      },
+      {
+        question: "Q4. もし明日、働き方を変えても大丈夫だと保証されたら？",
+        choices: {
+          A: "それでも、先々の生活が心配",
+          B: "自分の能力でやっていけるか不安",
+          C: "周りにどう伝えるかが気になる",
+          D: "何を選びたいのか、まだ決められない"
+        }
+      },
+      {
+        question: "Q5. 今の自分に一番必要だと思うのは？",
+        choices: {
+          A: "安心して選べるだけの見通し",
+          B: "自分の力を信じて一歩踏み出すこと",
+          C: "自分の希望を周りに伝えること",
+          D: "自分が望む働き方を見つけること"
+        }
+      }
+    ];
+
+    const RESULTS = {
+      A: {
+        title: "A｜先の不安が気になるタイプ",
+        focus: "気になるのは「変えたあとの生活」",
+        description: "先々のリスクを考え、安心できる見通しが持てるまで動きにくい傾向があります。",
+        step: "👉 最初の一歩：気になる働き方の収入や勤務条件を調べてみよう。"
+      },
+      B: {
+        title: "B｜自信が持てず準備したいタイプ",
+        focus: "気になるのは「自分にできるか」",
+        description: "経験やスキルが足りないと感じ、準備を優先しやすい傾向があります。",
+        step: "👉 最初の一歩：今までの仕事で身につけた力を3つ書き出してみよう。"
+      },
+      C: {
+        title: "C｜周りを優先するタイプ",
+        focus: "気になるのは「周りがどう思うか」",
+        description: "職場や家族を大切にするあまり、自分の希望を後回しにしやすい傾向があります。",
+        step: "👉 最初の一歩：「周りはどうしたい？」の前に「私はどうしたい？」と考えてみよう。"
+      },
+      D: {
+        title: "D｜自分の希望が見えにくいタイプ",
+        focus: "気になるのは「自分が何をしたいか」",
+        description: "今を変えたい気持ちはあっても、次に望む働き方がまだ曖昧な傾向があります。",
+        step: "👉 最初の一歩：「今の仕事で、何が変わったら嬉しい？」と考えてみよう。"
+      }
+    };
+
+    const startScreen = document.getElementById("start-screen");
+    const questionScreen = document.getElementById("question-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const questionTitle = document.getElementById("question-title");
+    const choicesEl = document.getElementById("choices");
+    const progressText = document.getElementById("progress-text");
+    const progressPercent = document.getElementById("progress-percent");
+    const progressBar = document.getElementById("progress-bar");
+    const progressTrack = document.getElementById("progress-track");
+    const backButton = document.getElementById("back-button");
+
+    let currentQuestion = 0;
+    let answers = Array(QUESTIONS.length).fill(null);
+
+    function showScreen(screen) {
+      [startScreen, questionScreen, resultScreen].forEach(el => el.classList.add("hidden"));
+      screen.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startQuiz() {
+      currentQuestion = 0;
+      answers = Array(QUESTIONS.length).fill(null);
+      showQuestion();
+      showScreen(questionScreen);
+    }
+
+    function showQuestion() {
+      const item = QUESTIONS[currentQuestion];
+      const number = currentQuestion + 1;
+      const percent = Math.round(number / QUESTIONS.length * 100);
+      progressText.textContent = `Q${number} / ${QUESTIONS.length}`;
+      progressPercent.textContent = `${percent}%`;
+      progressBar.style.width = `${percent}%`;
+      progressTrack.setAttribute("aria-valuenow", String(number));
+      questionTitle.textContent = item.question;
+      choicesEl.replaceChildren();
+
+      Object.entries(item.choices).forEach(([letter, label]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice" + (answers[currentQuestion] === letter ? " selected" : "");
+        button.setAttribute("aria-pressed", answers[currentQuestion] === letter ? "true" : "false");
+
+        const letterSpan = document.createElement("span");
+        letterSpan.className = "letter";
+        letterSpan.textContent = letter;
+        const textSpan = document.createElement("span");
+        textSpan.textContent = label;
+        button.append(letterSpan, textSpan);
+        button.addEventListener("click", () => {
+          answers[currentQuestion] = letter;
+          if (currentQuestion < QUESTIONS.length - 1) {
+            currentQuestion += 1;
+            showQuestion();
+          } else {
+            showResult();
+          }
+        });
+        choicesEl.append(button);
+      });
+
+      backButton.classList.toggle("hidden", currentQuestion === 0);
+    }
+
+    function getResultType() {
+      const counts = { A: 0, B: 0, C: 0, D: 0 };
+      answers.forEach(answer => { counts[answer] += 1; });
+      const maxCount = Math.max(...Object.values(counts));
+      const tied = Object.keys(counts).filter(letter => counts[letter] === maxCount);
+      if (tied.length === 1) return tied[0];
+
+      // 同数の場合はQ4の回答を優先。Q4の回答が同数候補に含まれていればそれを採用。
+      const q4Answer = answers[3];
+      if (tied.includes(q4Answer)) return q4Answer;
+      // Q4の回答が最多候補に含まれない場合はA→B→C→Dの順で採用。
+      return ["A", "B", "C", "D"].find(letter => tied.includes(letter));
+    }
+
+    function showResult() {
+      const type = getResultType();
+      const result = RESULTS[type];
+      document.getElementById("result-heading").textContent = result.title;
+      const content = document.getElementById("result-content");
+      content.replaceChildren();
+
+      const focus = document.createElement("p");
+      focus.className = "result-focus";
+      focus.textContent = result.focus;
+      const description = document.createElement("p");
+      description.textContent = result.description;
+      const step = document.createElement("p");
+      step.textContent = result.step;
+      const stepBox = document.createElement("div");
+      stepBox.className = "first-step";
+      stepBox.append(step);
+      content.append(focus, description, stepBox);
+
+      document.getElementById("line-cta-text").textContent = LINE_CTA_TEXT;
+      const lineLink = document.getElementById("line-link");
+      lineLink.href = LINE_URL;
+      lineLink.textContent = LINE_BUTTON_TEXT;
+      showScreen(resultScreen);
+    }
+
+    document.getElementById("start-button").addEventListener("click", () => {
+      startQuiz();
+    });
+    backButton.addEventListener("click", () => {
+      if (currentQuestion > 0) {
+        currentQuestion -= 1;
+        showQuestion();
+      }
+    });
+    document.getElementById("restart-button").addEventListener("click", () => {
+      startQuiz();
+    });
+
+    // LINE URLが未設定の間は、仮リンク先であることを明示し、誤って外部遷移しないようにする。
+    document.getElementById("line-link").addEventListener("click", (event) => {
+      if (LINE_URL === "https://line.me/") {
+        event.preventDefault();
+        alert("公開前に、HTML内の LINE_URL をご自身のLINE公式アカウントのURLに変更してください。");
+      }
+    });
+  </script>
+</body>
+</html>
